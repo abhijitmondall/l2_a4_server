@@ -1,11 +1,11 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('CUSTOMER', 'SELLER', 'ADMIN');
+CREATE TYPE "Role" AS ENUM ('customer', 'seller', 'admin');
 
 -- CreateEnum
-CREATE TYPE "UserStatus" AS ENUM ('ACTIVE', 'BANNED');
+CREATE TYPE "UserStatus" AS ENUM ('active', 'banned');
 
 -- CreateEnum
-CREATE TYPE "OrderStatus" AS ENUM ('PLACED', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELLED');
+CREATE TYPE "OrderStatus" AS ENUM ('placed', 'processing', 'shipped', 'delivered', 'cancelled');
 
 -- CreateEnum
 CREATE TYPE "PaymentMethod" AS ENUM ('COD');
@@ -17,7 +17,7 @@ CREATE TABLE "User" (
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "role" "Role" NOT NULL,
-    "status" "UserStatus" NOT NULL DEFAULT 'ACTIVE',
+    "status" "UserStatus" NOT NULL DEFAULT 'active',
     "phone" TEXT,
     "address" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -77,7 +77,7 @@ CREATE TABLE "CartItem" (
 CREATE TABLE "Order" (
     "id" TEXT NOT NULL,
     "customerId" TEXT NOT NULL,
-    "status" "OrderStatus" NOT NULL DEFAULT 'PLACED',
+    "status" "OrderStatus" NOT NULL DEFAULT 'placed',
     "paymentMethod" "PaymentMethod" NOT NULL DEFAULT 'COD',
     "totalAmount" INTEGER NOT NULL,
     "shippingName" TEXT NOT NULL,

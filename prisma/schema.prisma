@@ -19,22 +19,22 @@ datasource db {
 ////////////////////
 
 enum Role {
-  CUSTOMER
-  SELLER
-  ADMIN
+  customer
+  seller
+  admin
 }
 
 enum UserStatus {
-  ACTIVE
-  BANNED
+  active
+  banned
 }
 
 enum OrderStatus {
-  PLACED
-  PROCESSING
-  SHIPPED
-  DELIVERED
-  CANCELLED
+  placed
+  processing
+  shipped
+  delivered
+  cancelled
 }
 
 enum PaymentMethod {
@@ -51,7 +51,7 @@ model User {
   email     String     @unique
   password  String
   role      Role
-  status    UserStatus @default(ACTIVE)
+  status    UserStatus @default(active)
 
   phone     String?
   address   String?
@@ -149,7 +149,7 @@ model Order {
   customerId    String
   customer      User          @relation("CustomerOrders", fields: [customerId], references: [id])
 
-  status        OrderStatus   @default(PLACED)
+  status        OrderStatus   @default(placed)
   paymentMethod PaymentMethod @default(COD)
   totalAmount   Int
 

@@ -1,7 +1,10 @@
 import express from "express";
 import { authController } from "./auth.controller";
+import { auth } from "../../middleware/auth";
 
 const router = express.Router();
+
+router.get("/me", auth.protect, authController.getCurrentUser);
 
 router.post("/signup", authController.signup);
 router.post("/signin", authController.signin);

@@ -57,7 +57,33 @@ const signin = async (email: string, password: string) => {
   return { user, token };
 };
 
+const getCurrentUser = async (id: string) => {
+  const currentUser = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      status: true,
+      phone: true,
+      address: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  if (!currentUser) {
+    return null;
+  }
+
+  return currentUser;
+};
+
 export const authService = {
   signup,
   signin,
+  getCurrentUser,
 };

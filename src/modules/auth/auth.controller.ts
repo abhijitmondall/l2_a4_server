@@ -40,7 +40,32 @@ const signin = async (req: Request, res: Response) => {
   }
 };
 
+const getCurrentUser = async (req: Request, res: Response) => {
+  try {
+    const user = req.user;
+
+    if (!user) {
+      throw new Error("Please login!");
+    }
+
+    const currentUser = await authService.getCurrentUser(user.id);
+
+    res.status(200).json({
+      success: true,
+      message: "User retrieved successfully",
+      data: currentUser,
+    });
+  } catch (err: any) {
+    console.log(err);
+    res.status(400).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 export const authController = {
   signup,
   signin,
+  getCurrentUser,
 };

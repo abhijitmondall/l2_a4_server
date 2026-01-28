@@ -26,11 +26,11 @@ const updateUser = async (req: Request, res: Response) => {
 
     if (!userId) throw new Error("Invalid ID");
 
-    if (req.user?.role === "customer") {
-      if (+req.user?.id !== +userId) {
-        throw new Error("You do not have permission to update this user!");
-      }
-    }
+    // if (req.user?.role === "customer") {
+    //   if (+req.user?.id !== +userId) {
+    //     throw new Error("You do not have permission to update this user!");
+    //   }
+    // }
 
     const getUserByID = await userService.getUserByID(userId as string);
 

@@ -11,7 +11,12 @@ router.get(
   userController.getUsers,
 );
 
-router.put("/:userId", auth.protect, userController.updateUser);
+router.put(
+  "/:userId",
+  auth.protect,
+  auth.restrictTo("admin"),
+  userController.updateUser,
+);
 
 router.delete(
   "/:userId",

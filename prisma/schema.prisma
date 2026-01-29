@@ -52,7 +52,7 @@ model User {
   password  String
   role      Role
   status    UserStatus @default(active)
-
+  photo String?
   phone     String?
   address   String?
 

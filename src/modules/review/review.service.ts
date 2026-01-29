@@ -63,6 +63,19 @@ const getMedicineReviews = async (medicineId: string) => {
         select: {
           id: true,
           name: true,
+          photo: true,
+        },
+      },
+      medicine: {
+        select: {
+          id: true,
+          name: true,
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       },
     },

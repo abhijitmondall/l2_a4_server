@@ -31,6 +31,8 @@ const getMedicineReviews = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
+      message: "Reviews retrieved successfully",
+      total: reviews.length,
       data: reviews,
     });
   } catch (error: any) {

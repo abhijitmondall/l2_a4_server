@@ -9,6 +9,7 @@ const getUsers = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Users retrieved successfully",
+      total: users.length,
       data: users,
     });
   } catch (err: any) {
@@ -87,11 +88,12 @@ const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
 
-    await userService.deleteUser(userId as string);
+    const deletedUser = await userService.deleteUser(userId as string);
 
     res.status(200).json({
       success: true,
       message: "User deleted successfully",
+      data: deletedUser,
     });
   } catch (err: any) {
     console.log(err);

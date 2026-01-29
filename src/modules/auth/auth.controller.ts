@@ -3,6 +3,12 @@ import { authService } from "./auth.service";
 
 const signup = async (req: Request, res: Response) => {
   try {
+    const { role } = req.body;
+
+    if (role && role === "admin") {
+      throw new Error("You don't have permission to signup as a Admin!");
+    }
+
     const newUser = await authService.signup(req.body);
 
     const user = { ...newUser, password: undefined };

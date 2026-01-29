@@ -1,8 +1,8 @@
-import { User } from "../../../generated/prisma/client";
+import { Medicine, User } from "../../../generated/prisma/client";
 import { OrderStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 
-const addMedicine = async (sellerId: string, payload: any) => {
+const addMedicine = async (sellerId: string, payload: Medicine) => {
   return prisma.medicine.create({
     data: {
       ...payload,
@@ -14,28 +14,40 @@ const addMedicine = async (sellerId: string, payload: any) => {
 const updateMedicine = async (
   sellerId: string,
   medicineId: string,
-  payload: any,
+  payload: Medicine,
 ) => {
-  return prisma.medicine.updateMany({
+  const updatedMedicine = await prisma.medicine.update({
     where: {
       id: medicineId,
       sellerId,
     },
     data: payload,
   });
+
+  if (!updatedMedicine) {
+    return null;
+  }
+
+  return updatedMedicine;
 };
 
 const deleteMedicine = async (sellerId: string, medicineId: string) => {
-  return prisma.medicine.deleteMany({
+  const deletedMedicine = await prisma.medicine.delete({
     where: {
       id: medicineId,
       sellerId,
     },
   });
+
+  if (!deletedMedicine) {
+    return null;
+  }
+
+  return deletedMedicine;
 };
 
 const getSellerOrders = async (sellerId: string) => {
-  return prisma.order.findMany({
+  const sellerOrders = await prisma.order.findMany({
     where: {
       items: {
         some: {
@@ -59,6 +71,8 @@ const getSellerOrders = async (sellerId: string) => {
       },
     },
   });
+
+  return sellerOrders;
 };
 
 const updateOrderStatus = async (

@@ -21,7 +21,7 @@ const updateMedicine = async (req: Request, res: Response) => {
     const sellerId = req?.user?.id;
     const { id } = req.params;
 
-    const result = await sellerService.updateMedicine(
+    const updatedMedicine = await sellerService.updateMedicine(
       sellerId,
       id as string,
       req.body,
@@ -30,7 +30,7 @@ const updateMedicine = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Medicine updated successfully",
-      data: result,
+      data: updatedMedicine,
     });
   } catch (err: any) {
     res.status(400).json({ success: false, message: err.message });
@@ -42,12 +42,15 @@ const deleteMedicine = async (req: Request, res: Response) => {
     const sellerId = req?.user?.id;
     const { id } = req?.params;
 
-    const result = await sellerService.deleteMedicine(sellerId, id as string);
+    const deletedMedicine = await sellerService.deleteMedicine(
+      sellerId,
+      id as string,
+    );
 
     res.status(200).json({
       success: true,
       message: "Medicine deleted successfully",
-      data: result,
+      data: deletedMedicine,
     });
   } catch (err: any) {
     res.status(400).json({ success: false, message: err.message });
@@ -57,12 +60,12 @@ const deleteMedicine = async (req: Request, res: Response) => {
 const getSellerOrders = async (req: Request, res: Response) => {
   try {
     const sellerId = req?.user?.id;
-    const result = await sellerService.getSellerOrders(sellerId);
+    const sellerOrders = await sellerService.getSellerOrders(sellerId);
 
     res.status(200).json({
       success: true,
       message: "Orders retrieved successfully",
-      data: result,
+      data: sellerOrders,
     });
   } catch (err: any) {
     res.status(400).json({ success: false, message: err.message });

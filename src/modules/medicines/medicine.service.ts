@@ -8,10 +8,19 @@ export interface IGetMedicinesParams {
   minPrice?: number;
   maxPrice?: number;
   inStock?: boolean;
+  minRating?: number;
 }
 
 const getMedicines = async (params: IGetMedicinesParams) => {
-  const { search, categoryId, sellerId, minPrice, maxPrice, inStock } = params;
+  const {
+    search,
+    categoryId,
+    sellerId,
+    minPrice,
+    maxPrice,
+    inStock,
+    minRating,
+  } = params;
 
   const where: Prisma.MedicineWhereInput = {};
 
@@ -44,6 +53,12 @@ const getMedicines = async (params: IGetMedicinesParams) => {
     where.stock = { equals: 0 };
   }
 
+  if (minRating !== undefined) {
+    where.reviews = {
+      some: { rating: { gte: minRating } }, // at least one review with rating >= minRating
+    };
+  }
+
   const medicines = await prisma.medicine.findMany({
     where,
     orderBy: {
@@ -55,6 +70,19 @@ const getMedicines = async (params: IGetMedicinesParams) => {
         select: {
           id: true,
           name: true,
+        },
+      },
+      reviews: {
+        select: {
+          id: true,
+          comment: true,
+          rating: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       },
     },

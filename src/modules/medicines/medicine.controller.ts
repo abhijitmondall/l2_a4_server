@@ -3,8 +3,15 @@ import { IGetMedicinesParams, medicineService } from "./medicine.service";
 
 const getMedicines = async (req: Request, res: Response) => {
   try {
-    const { search, categoryId, sellerId, minPrice, maxPrice, inStock } =
-      req.query;
+    const {
+      search,
+      categoryId,
+      sellerId,
+      minPrice,
+      maxPrice,
+      inStock,
+      minRating,
+    } = req.query;
 
     const filters: IGetMedicinesParams = {};
 
@@ -14,6 +21,7 @@ const getMedicines = async (req: Request, res: Response) => {
 
     if (minPrice) filters.minPrice = Number(minPrice);
     if (maxPrice) filters.maxPrice = Number(maxPrice);
+    if (minRating) filters.minRating = Number(minRating);
 
     if (inStock === "true") {
       filters.inStock = true;

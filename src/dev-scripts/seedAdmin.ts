@@ -16,7 +16,7 @@ const signup = async () => {
       throw new Error("Something went wrong. Please try again!");
     }
 
-    console.log("Signup as a Admin Successfully!");
+    console.log("Registered as an Admin Successfully!");
     console.log(newUser);
     process.exit(1);
   } catch (err: any) {

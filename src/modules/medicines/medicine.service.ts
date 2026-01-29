@@ -32,6 +32,19 @@ const getMedicine = async (id: string) => {
           address: true,
         },
       },
+      reviews: {
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+              phone: true,
+              address: true,
+            },
+          },
+        },
+      },
     },
   });
 

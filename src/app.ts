@@ -4,6 +4,7 @@ import { userRoutes } from "./modules/user/user.routes";
 import { sellerRoutes } from "./modules/seller/seller.routes";
 import { medicineRoutes } from "./modules/medicines/medicine.routes";
 import { orderRoutes } from "./modules/order/order.routes";
+import { reviewRoutes } from "./modules/review/review.routes";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/seller", sellerRoutes);
 app.use("/api/v1/medicines", medicineRoutes);
 app.use("/api/v1/orders", orderRoutes);
+app.use("/api/v1/reviews", reviewRoutes);
 
 // app.use("/", (req, res) => {
 //   res.status(200).json({

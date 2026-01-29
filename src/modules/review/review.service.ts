@@ -50,6 +50,18 @@ const createReview = async (user: User, data: CreateReviewInput) => {
           name: true,
         },
       },
+      medicine: {
+        select: {
+          id: true,
+          name: true,
+          category: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
     },
   });
 };

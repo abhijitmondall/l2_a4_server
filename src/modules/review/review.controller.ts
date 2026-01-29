@@ -72,11 +72,15 @@ const deleteReview = async (req: Request, res: Response) => {
     const user = req.user!;
     const reviewId = req.params.id;
 
-    await reviewService.deleteReview(reviewId as string, user as User);
+    const deletedReview = await reviewService.deleteReview(
+      reviewId as string,
+      user as User,
+    );
 
     res.status(200).json({
       success: true,
       message: "Review deleted successfully",
+      data: deletedReview,
     });
   } catch (error: any) {
     res.status(403).json({

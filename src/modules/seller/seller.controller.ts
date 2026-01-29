@@ -65,6 +65,7 @@ const getSellerOrders = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Orders retrieved successfully",
+      total: sellerOrders.length,
       data: sellerOrders,
     });
   } catch (err: any) {

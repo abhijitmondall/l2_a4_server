@@ -9,6 +9,7 @@ const signup = async (payload: User) => {
     name,
     email,
     password: plainPass,
+    photo,
     phone,
     status,
     role,
@@ -22,7 +23,7 @@ const signup = async (payload: User) => {
   const password = await bcrypt.hash(plainPass as string, 12);
 
   const newUser = await prisma.user.create({
-    data: { name, email, password, phone, status, role, address },
+    data: { name, email, password, photo, phone, status, role, address },
   });
 
   return newUser;
@@ -69,6 +70,7 @@ const getCurrentUser = async (id: string) => {
       role: true,
       status: true,
       phone: true,
+      photo: true,
       address: true,
       createdAt: true,
       updatedAt: true,

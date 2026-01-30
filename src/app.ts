@@ -1,12 +1,21 @@
 import express, { Request, Response } from "express";
+import cors from "cors";
 import { authRoutes } from "./modules/auth/auth.routes";
 import { userRoutes } from "./modules/user/user.routes";
 import { sellerRoutes } from "./modules/seller/seller.routes";
 import { medicineRoutes } from "./modules/medicines/medicine.routes";
 import { orderRoutes } from "./modules/order/order.routes";
 import { reviewRoutes } from "./modules/review/review.routes";
+import config from "./config";
 
 const app = express();
+
+app.use(
+  cors({
+    origin: config.client_url,
+    credentials: true,
+  }),
+);
 
 app.use(express.json());
 

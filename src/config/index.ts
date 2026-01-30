@@ -8,6 +8,7 @@ const config = {
   port: process.env.PORT,
   jwt_secret: process.env.JWT_SECRET,
   jwt_expiresIn: process.env.JWT_EXPIRES_IN,
+  client_url: process.env.CLIENT_URL,
 };
 
 export default config;

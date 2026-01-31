@@ -6,6 +6,7 @@ const getMedicines = async (req: Request, res: Response) => {
     const {
       search,
       categoryId,
+      category,
       sellerId,
       minPrice,
       maxPrice,
@@ -17,6 +18,7 @@ const getMedicines = async (req: Request, res: Response) => {
 
     if (search) filters.search = search as string;
     if (categoryId) filters.categoryId = categoryId as string;
+    if (category) filters.category = category as string;
     if (sellerId) filters.sellerId = sellerId as string;
 
     if (minPrice) filters.minPrice = Number(minPrice);

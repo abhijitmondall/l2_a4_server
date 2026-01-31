@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { authService } from "./auth.service";
+import { userService } from "../user/user.service";
+import { User } from "../../../generated/prisma/client";
 
 const signup = async (req: Request, res: Response) => {
   try {
@@ -70,8 +72,95 @@ const getCurrentUser = async (req: Request, res: Response) => {
   }
 };
 
+const updateCurrentUser = async (req: Request, res: Response) => {
+  try {
+    const id = req.user?.id;
+
+    if (!id) throw new Error("Invalid ID");
+
+    const getUserByID = await userService.getUserByID(id);
+
+    if (!getUserByID) {
+      throw new Error(`No User Found with this id: ${id}`);
+    }
+
+    let { name, photo, phone, address } = req.body;
+
+    const updatedUser = await authService.updateCurrentUser({
+      name,
+      phone,
+      photo,
+      address,
+      id,
+    } as User);
+
+    if (!updatedUser) {
+      throw new Error(`No User Found with this id: ${id}`);
+    }
+
+    const user = { ...updatedUser, password: undefined };
+
+    res.status(200).json({
+      success: true,
+      message: "User Updated successfully",
+      data: user,
+    });
+  } catch (err: any) {
+    console.log(err);
+    res.status(400).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+const updateCurrentUserPassword = async (req: Request, res: Response) => {
+  try {
+    const id = req.user?.id;
+
+    if (!id) throw new Error("Invalid ID");
+
+    const getUserByID = await userService.getUserByID(id);
+
+    if (!getUserByID) {
+      throw new Error(`No User Found with this id: ${id}`);
+    }
+
+    let { password } = req.body;
+
+    if ((password as string)?.trim().length < 6) {
+      throw new Error("Password at least be 6 characters long!");
+    }
+
+    const updatedUser = await authService.updateCurrentUserPassword({
+      password,
+      id,
+    } as User);
+
+    if (!updatedUser) {
+      throw new Error(`No User Found with this id: ${id}`);
+    }
+
+    const user = { ...updatedUser, password: undefined };
+
+    res.status(200).json({
+      success: true,
+      message: "Password Updated successfully",
+      data: user,
+    });
+  } catch (err: any) {
+    console.log(err);
+    res.status(400).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
 export const authController = {
   signup,
   signin,
+  updateCurrentUser,
+  updateCurrentUserPassword,
   getCurrentUser,
 };

@@ -8,6 +8,7 @@ const signup = async (payload: User) => {
   const {
     name,
     email,
+    gender,
     password: plainPass,
     photo,
     phone,
@@ -23,7 +24,17 @@ const signup = async (payload: User) => {
   const password = await bcrypt.hash(plainPass as string, 12);
 
   const newUser = await prisma.user.create({
-    data: { name, email, password, photo, phone, status, role, address },
+    data: {
+      name,
+      email,
+      gender,
+      password,
+      photo,
+      phone,
+      status,
+      role,
+      address,
+    },
   });
 
   return newUser;
@@ -84,8 +95,50 @@ const getCurrentUser = async (id: string) => {
   return currentUser;
 };
 
+const updateCurrentUser = async (payload: User) => {
+  const { id, name, photo, phone, address } = payload;
+
+  const updatedUser = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      name,
+      photo,
+      phone,
+      address,
+    },
+  });
+
+  if (!updatedUser) {
+    return null;
+  }
+  return updatedUser;
+};
+const updateCurrentUserPassword = async (payload: User) => {
+  const { id, password: plainPass } = payload;
+
+  const password = await bcrypt.hash(plainPass as string, 12);
+
+  const updatedPass = await prisma.user.update({
+    where: {
+      id,
+    },
+    data: {
+      password,
+    },
+  });
+
+  if (!updatedPass) {
+    return null;
+  }
+  return updatedPass;
+};
+
 export const authService = {
   signup,
   signin,
+  updateCurrentUser,
+  updateCurrentUserPassword,
   getCurrentUser,
 };

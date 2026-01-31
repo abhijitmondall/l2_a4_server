@@ -41,6 +41,12 @@ enum PaymentMethod {
   COD
 }
 
+enum Gender {
+  Male
+  Female
+  Other
+}
+
 ////////////////////
 /// USER
 ////////////////////
@@ -55,6 +61,7 @@ model User {
   photo String?
   phone     String?
   address   String?
+  gender Gender?
 
   // Relations
   medicines   Medicine[]  @relation("SellerMedicines")

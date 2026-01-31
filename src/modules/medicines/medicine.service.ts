@@ -4,6 +4,7 @@ import { prisma } from "../../lib/prisma";
 export interface IGetMedicinesParams {
   search?: string;
   categoryId?: string;
+  category?: string;
   sellerId?: string;
   minPrice?: number;
   maxPrice?: number;
@@ -15,6 +16,7 @@ const getMedicines = async (params: IGetMedicinesParams) => {
   const {
     search,
     categoryId,
+    category,
     sellerId,
     minPrice,
     maxPrice,
@@ -33,6 +35,9 @@ const getMedicines = async (params: IGetMedicinesParams) => {
 
   if (categoryId) {
     where.categoryId = categoryId;
+  }
+  if (category) {
+    where.category = { name: category };
   }
 
   if (sellerId) {

@@ -14,6 +14,7 @@ app.use(
   cors({
     origin: config.client_url,
     credentials: true,
+    optionsSuccessStatus: 200,
   }),
 );
 

@@ -40,6 +40,24 @@ const getMyOrders = async (req: Request, res: Response) => {
   }
 };
 
+const getAllOrder = async (req: Request, res: Response) => {
+  try {
+    const orders = await orderService.getAllOrder();
+
+    res.status(200).json({
+      success: true,
+      message: "Orders retrieved successfully",
+      total: orders.length,
+      data: orders,
+    });
+  } catch (error: any) {
+    res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 const getOrderDetails = async (req: Request, res: Response) => {
   try {
     const customerId = req.user!.id;
@@ -69,6 +87,7 @@ const getOrderDetails = async (req: Request, res: Response) => {
 
 export const orderController = {
   createOrder,
+  getAllOrder,
   getOrderDetails,
   getMyOrders,
 };

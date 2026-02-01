@@ -1,6 +1,91 @@
-import { Medicine, User } from "../../../generated/prisma/client";
+import { Medicine, Prisma, User } from "../../../generated/prisma/client";
 import { OrderStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
+import { IGetMedicinesParams } from "../medicines/medicine.service";
+
+const getMedicines = async (params: IGetMedicinesParams) => {
+  const {
+    search,
+    categoryId,
+    category,
+    sellerId,
+    minPrice,
+    maxPrice,
+    inStock,
+    minRating,
+  } = params;
+
+  const where: Prisma.MedicineWhereInput = {};
+
+  if (search) {
+    where.OR = [
+      { name: { contains: search, mode: "insensitive" } },
+      { description: { contains: search, mode: "insensitive" } },
+    ];
+  }
+
+  if (categoryId) {
+    where.categoryId = categoryId;
+  }
+  if (category) {
+    where.category = { name: category };
+  }
+
+  if (sellerId) {
+    where.sellerId = sellerId;
+  }
+
+  if (minPrice !== undefined || maxPrice !== undefined) {
+    where.price = {};
+    if (minPrice !== undefined) where.price.gte = minPrice;
+    if (maxPrice !== undefined) where.price.lte = maxPrice;
+  }
+
+  if (inStock === true) {
+    where.stock = { gt: 0 };
+  }
+
+  if (inStock === false) {
+    where.stock = { equals: 0 };
+  }
+
+  if (minRating !== undefined) {
+    where.reviews = {
+      some: { rating: { gte: minRating } }, // at least one review with rating >= minRating
+    };
+  }
+
+  const medicines = await prisma.medicine.findMany({
+    where,
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      category: true,
+      seller: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+      reviews: {
+        select: {
+          id: true,
+          comment: true,
+          rating: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return medicines;
+};
 
 const addMedicine = async (sellerId: string, payload: Medicine) => {
   return prisma.medicine.create({
@@ -46,33 +131,48 @@ const deleteMedicine = async (sellerId: string, medicineId: string) => {
   return deletedMedicine;
 };
 
-const getSellerOrders = async (sellerId: string) => {
+const getSellerOrders = async (sellerId: string, status?: OrderStatus) => {
   const sellerOrders = await prisma.order.findMany({
     where: {
-      items: {
-        some: {
-          sellerId,
-        },
-      },
+      ...(status && status !== ("all" as any) && { status }),
+      items: { some: { sellerId } },
     },
     include: {
       items: {
-        where: { sellerId },
         include: {
-          medicine: true,
+          medicine: { select: { name: true, image: true } },
         },
       },
-      customer: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-        },
-      },
+      customer: { select: { name: true, email: true } },
     },
+    orderBy: { createdAt: "desc" },
   });
 
-  return sellerOrders;
+  return sellerOrders.map((order) => {
+    const myItems = order.items.filter((item) => item.sellerId === sellerId);
+    const otherSellerItems = order.items.filter(
+      (item) => item.sellerId !== sellerId,
+    );
+
+    // Calculate payouts
+    const sellerPayout = myItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
+    const otherPayout = otherSellerItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
+
+    return {
+      ...order,
+      myItems,
+      otherSellerItems,
+      sellerPayout,
+      otherPayout,
+      items: undefined,
+    };
+  });
 };
 
 const updateOrderStatus = async (
@@ -103,6 +203,7 @@ const updateOrderStatus = async (
 };
 
 export const sellerService = {
+  getMedicines,
   addMedicine,
   updateMedicine,
   deleteMedicine,

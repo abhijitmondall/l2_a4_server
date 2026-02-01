@@ -4,6 +4,13 @@ import { auth } from "../../middleware/auth";
 
 const router = express.Router();
 
+router.get(
+  "/medicines",
+  auth.protect,
+  auth.restrictTo("seller"),
+  sellerController.getMedicines,
+);
+
 router.post(
   "/medicines",
   auth.protect,

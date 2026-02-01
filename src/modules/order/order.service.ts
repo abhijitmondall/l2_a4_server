@@ -85,6 +85,68 @@ const getCustomerOrders = async (customerId: string) => {
   });
 };
 
+const getAllOrder = async () => {
+  const orders = await prisma.order.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+    include: {
+      items: {
+        include: {
+          medicine: {
+            select: {
+              id: true,
+              name: true,
+              price: true,
+              category: {
+                select: {
+                  id: true,
+                  name: true,
+                },
+              },
+            },
+          },
+          seller: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+      customer: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
+  });
+
+  return orders.map((order) => {
+    const sellerSummaries = order.items.reduce((acc: any, item) => {
+      const sId = item.sellerId;
+      if (!acc[sId]) {
+        acc[sId] = {
+          sellerId: sId,
+          sellerName: item.seller?.name,
+          sellerEmail: item.seller?.email,
+          payable: 0,
+        };
+      }
+      acc[sId].payable += item.price * item.quantity;
+      return acc;
+    }, {});
+
+    return {
+      ...order,
+      sellerBreakdown: Object.values(sellerSummaries),
+    };
+  });
+};
+
 const getOrderById = async (orderId: string, customerId: string) => {
   const order = await prisma.order.findFirst({
     where: {
@@ -115,6 +177,7 @@ const getOrderById = async (orderId: string, customerId: string) => {
 
 export const orderService = {
   createOrder,
+  getAllOrder,
   getCustomerOrders,
   getOrderById,
 };

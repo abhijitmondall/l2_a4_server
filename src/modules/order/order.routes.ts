@@ -7,9 +7,17 @@ const router = Router();
 router.get(
   "/",
   auth.protect,
+  auth.restrictTo("admin"),
+  orderController.getAllOrder,
+);
+
+router.get(
+  "/me",
+  auth.protect,
   auth.restrictTo("customer"),
   orderController.getMyOrders,
 );
+
 router.get(
   "/:id",
   auth.protect,

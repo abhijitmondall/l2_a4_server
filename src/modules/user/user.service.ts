@@ -4,6 +4,9 @@ import { User } from "../../../generated/prisma/client";
 
 const getUsers = async () => {
   const users = await prisma.user.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
     select: {
       id: true,
       name: true,

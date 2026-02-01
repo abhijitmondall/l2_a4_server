@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "main": "server.ts",
     "dev": "npx tsx watch ./src/server.ts",
     "build": "tsc",
+    "build:app": "ncc build src/app.js -o dist --minify --no-asset-relocation",
     "seed:admin": "npx tsx ./src/dev-scripts/seedAdmin.ts"
   },
   "keywords": [],
@@ -19,6 +21,7 @@
     "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^25.0.10",
     "@types/pg": "^8.16.0",
+    "@vercel/ncc": "^0.38.4",
     "prisma": "^7.3.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"

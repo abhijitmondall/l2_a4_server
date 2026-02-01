@@ -7,7 +7,7 @@ const getMedicines = async (params: IGetMedicinesParams) => {
   const {
     search,
     categoryId,
-    category,
+    categoryName,
     sellerId,
     minPrice,
     maxPrice,
@@ -27,8 +27,8 @@ const getMedicines = async (params: IGetMedicinesParams) => {
   if (categoryId) {
     where.categoryId = categoryId;
   }
-  if (category) {
-    where.category = { name: category };
+  if (categoryName) {
+    where.category = { name: categoryName };
   }
 
   if (sellerId) {

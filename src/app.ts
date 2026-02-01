@@ -27,13 +27,6 @@ app.use("/api/v1/medicines", medicineRoutes);
 app.use("/api/v1/orders", orderRoutes);
 app.use("/api/v1/reviews", reviewRoutes);
 
-// app.use("/", (req, res) => {
-//   res.status(200).json({
-//     status: "success",
-//     message: "Hello there! The API is ready!",
-//   });
-// });
-
 app.use((req: Request, res: Response) => {
   res.status(404).json({
     success: false,

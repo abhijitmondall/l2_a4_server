@@ -53,17 +53,8 @@ const getUserByID = async (id: string) => {
 };
 
 const updateUser = async (payload: User) => {
-  const {
-    id,
-    name,
-    email,
-    password: plainPass,
-    role,
-    phone,
-    address,
-    status,
-  } = payload;
-  const password = await bcrypt.hash(plainPass as string, 12);
+  const { id, name, email, role, phone, address, status } = payload;
+  // const password = await bcrypt.hash(plainPass as string, 12);
 
   const updatedUser = await prisma.user.update({
     where: {
@@ -72,7 +63,6 @@ const updateUser = async (payload: User) => {
     data: {
       name,
       email,
-      password,
       role,
       phone,
       address,

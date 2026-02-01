@@ -1,4 +1,4 @@
-import { OrderItem } from "../../../generated/prisma/client";
+import { OrderItem, OrderStatus } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
 
 interface ICreateOrderInput {
@@ -67,9 +67,10 @@ const createOrder = async (customerId: string, data: ICreateOrderInput) => {
   });
 };
 
-const getCustomerOrders = async (customerId: string) => {
+const getCustomerOrders = async (customerId: string, status?: OrderStatus) => {
   return prisma.order.findMany({
     where: {
+      ...(status && status !== ("all" as any) && { status }),
       customerId,
     },
     orderBy: {
@@ -175,9 +176,27 @@ const getOrderById = async (orderId: string, customerId: string) => {
   return order;
 };
 
+const updateOrderStatus = async (orderId: string, status: OrderStatus) => {
+  const order = await prisma.order.findFirst({
+    where: {
+      id: orderId,
+    },
+  });
+
+  if (!order) {
+    throw new Error("Order not found or unauthorized");
+  }
+
+  return prisma.order.update({
+    where: { id: orderId },
+    data: { status },
+  });
+};
+
 export const orderService = {
   createOrder,
   getAllOrder,
+  updateOrderStatus,
   getCustomerOrders,
   getOrderById,
 };

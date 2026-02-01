@@ -23,6 +23,7 @@ const getUsers = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
   try {
+    console.log(req.body);
     const { userId } = req.params;
 
     if (!userId) throw new Error("Invalid ID");
@@ -39,24 +40,11 @@ const updateUser = async (req: Request, res: Response) => {
       throw new Error(`No User Found with this id: ${userId}`);
     }
 
-    let { name, email, password, role, phone, address, status } = req.body;
-
-    if (!name) name = getUserByID?.name;
-    if (!email) email = getUserByID?.email;
-    if (!password) password = getUserByID?.password;
-    if (!role) role = getUserByID?.role;
-    if (!phone) phone = getUserByID?.phone;
-    if (!address) address = getUserByID?.address;
-    if (!status) status = getUserByID?.status;
-
-    if ((password as string).trim().length < 6) {
-      throw new Error("Password at least be 6 characters long!");
-    }
+    let { name, email, role, phone, address, status } = req.body;
 
     const updatedUser = await userService.updateUser({
       name,
       email,
-      password,
       role,
       phone,
       address,

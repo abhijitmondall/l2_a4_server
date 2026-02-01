@@ -37,7 +37,17 @@ const signup = async (payload: User) => {
     },
   });
 
-  return newUser;
+  const token = jwt.sign(
+    { email: newUser.email },
+    config.jwt_secret as string,
+    {
+      expiresIn: "30d",
+    },
+  );
+
+  const user = { ...newUser, password: undefined };
+
+  return { user, token };
 };
 
 const signin = async (email: string, password: string) => {

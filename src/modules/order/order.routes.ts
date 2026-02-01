@@ -32,4 +32,11 @@ router.post(
   orderController.createOrder,
 );
 
+router.patch(
+  "/:id",
+  auth.protect,
+  auth.restrictTo("admin"),
+  orderController.updateOrderStatus,
+);
+
 export const orderRoutes = router;

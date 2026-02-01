@@ -28,7 +28,6 @@ const protect = async (req: Request, res: Response, next: NextFunction) => {
     // 3. Check if user still exists
     const currentUser = await userService.getUserByEmail(email);
 
-    console.log(currentUser);
     if (!currentUser) {
       throw new Error(
         " You don not have permission to perform this action!(Invalid Email/User)",

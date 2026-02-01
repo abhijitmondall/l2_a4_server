@@ -13,12 +13,12 @@ const signup = async (req: Request, res: Response) => {
 
     const newUser = await authService.signup(req.body);
 
-    const user = { ...newUser, password: undefined };
+    // const user = { ...newUser, password: undefined };
 
     res.status(201).json({
       success: true,
       message: "User registered successfully!",
-      data: user,
+      data: newUser,
     });
   } catch (err: any) {
     console.log(err);

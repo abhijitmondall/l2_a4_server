@@ -1,6 +1,6 @@
 import { prisma } from "../../lib/prisma";
 const getMedicines = async (params) => {
-    const { search, categoryId, category, sellerId, minPrice, maxPrice, inStock, minRating, } = params;
+    const { search, categoryId, categoryName, sellerId, minPrice, maxPrice, inStock, minRating, } = params;
     const where = {};
     if (search) {
         where.OR = [
@@ -11,8 +11,8 @@ const getMedicines = async (params) => {
     if (categoryId) {
         where.categoryId = categoryId;
     }
-    if (category) {
-        where.category = { name: category };
+    if (categoryName) {
+        where.category = { name: categoryName };
     }
     if (sellerId) {
         where.sellerId = sellerId;

@@ -1,6 +1,7 @@
 export interface IGetMedicinesParams {
     search?: string;
     categoryId?: string;
+    category?: string;
     categoryName?: string;
     sellerId?: string;
     minPrice?: number;

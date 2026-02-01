@@ -1,15 +1,15 @@
 import { sellerService } from "./seller.service";
 const getMedicines = async (req, res) => {
     try {
-        const { search, categoryId, category, minPrice, maxPrice, inStock, minRating, } = req.query;
+        const { search, categoryId, categoryName, minPrice, maxPrice, inStock, minRating, } = req.query;
         const filters = {};
         filters.sellerId = req.user?.id;
         if (search)
             filters.search = search;
         if (categoryId)
             filters.categoryId = categoryId;
-        if (category)
-            filters.category = category;
+        if (categoryName)
+            filters.categoryName = categoryName;
         if (minPrice)
             filters.minPrice = Number(minPrice);
         if (maxPrice)

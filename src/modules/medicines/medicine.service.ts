@@ -60,7 +60,7 @@ const getMedicines = async (params: IGetMedicinesParams) => {
 
   if (minRating !== undefined) {
     where.reviews = {
-      some: { rating: { gte: minRating } }, // at least one review with rating >= minRating
+      some: { rating: { gte: minRating } },
     };
   }
 
@@ -155,8 +155,35 @@ const addMedicineCategory = async (name: string) => {
   return category;
 };
 
+const deleteMedicineCategory = async (id: string) => {
+  // 1. Check if any medicines are using this category
+  const medicineCount = await prisma.medicine.count({
+    where: { categoryId: id },
+  });
+
+  if (medicineCount > 0) {
+    throw new Error(
+      "PROTOCOL_VIOLATION: Cannot delete category with active medicine records.",
+    );
+  }
+
+  // 2. Perform the delete
+  try {
+    const category = await prisma.category.delete({
+      where: { id },
+    });
+    return category;
+  } catch (error) {
+    return null;
+  }
+};
+
 const getMedicineCategories = async () => {
-  const categories = await prisma.category.findMany();
+  const categories = await prisma.category.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
 
   if (!categories) {
     return null;
@@ -169,5 +196,6 @@ export const medicineService = {
   getMedicines,
   getMedicine,
   addMedicineCategory,
+  deleteMedicineCategory,
   getMedicineCategories,
 };

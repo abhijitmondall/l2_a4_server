@@ -79,13 +79,39 @@ const getMedicine = async (req: Request, res: Response) => {
 const addMedicineCategory = async (req: Request, res: Response) => {
   try {
     const { name } = req.body;
-    console.log(name);
+
     const category = await medicineService.addMedicineCategory(name);
 
     res.status(200).json({
       success: true,
       message: "Category created successfully",
       data: category,
+    });
+  } catch (err: any) {
+    console.log(err);
+    res.status(400).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+const deleteMedicineCategory = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      throw new Error(`Invalid Medicine ID!: ${id}`);
+    }
+
+    const deletedCategory = await medicineService.deleteMedicineCategory(
+      id as string,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Category deleted successfully",
+      data: deletedCategory,
     });
   } catch (err: any) {
     console.log(err);
@@ -119,5 +145,6 @@ export const medicineController = {
   getMedicines,
   getMedicine,
   addMedicineCategory,
+  deleteMedicineCategory,
   getMedicineCategories,
 };

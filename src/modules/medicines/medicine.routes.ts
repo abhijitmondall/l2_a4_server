@@ -14,5 +14,11 @@ router.post(
   auth.restrictTo("admin"),
   medicineController.addMedicineCategory,
 );
+router.delete(
+  "/category/:id",
+  auth.protect,
+  auth.restrictTo("admin"),
+  medicineController.deleteMedicineCategory,
+);
 
 export const medicineRoutes = router;

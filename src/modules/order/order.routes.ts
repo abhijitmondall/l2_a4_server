@@ -35,7 +35,7 @@ router.post(
 router.patch(
   "/:id",
   auth.protect,
-  auth.restrictTo("admin"),
+  // auth.restrictTo("admin"),
   orderController.updateOrderStatus,
 );
 

@@ -94,16 +94,46 @@ const updateOrderStatus = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { status } = req.body;
+    const userId = req.user?.id;
+    const userRole = req.user?.role;
 
-    const result = await orderService.updateOrderStatus(id as string, status);
+    if (!id) {
+      throw new Error("Invalid Order ID!");
+    }
+
+    if (userRole === "customer") {
+      // 1. Ensure they only try to cancel
+      if (status !== "cancelled") {
+        throw new Error("Invalid action for customer role.");
+      }
+
+      // 2. Fetch order to check current status (Ownership + Business Logic)
+      const order = await orderService.getOrderById(id as string, userId);
+
+      if (!order) {
+        throw new Error("Order not found or unauthorized access.");
+      }
+
+      // 3. Prevent cancellation if already processing/shipped
+      if (order.status !== "placed") {
+        throw new Error(`Cannot cancel order. It is already ${order.status}.`);
+      }
+    }
+
+    // 4. Perform Update
+    const order = await orderService.updateOrderStatus(id as string, status);
 
     res.status(200).json({
       success: true,
       message: "Order status updated successfully",
-      data: result,
+      data: order,
     });
   } catch (err: any) {
-    res.status(400).json({ success: false, message: err.message });
+    console.log(err);
+    res.status(400).json({
+      success: false,
+      message: err.message || "Internal Server Error",
+    });
   }
 };
 

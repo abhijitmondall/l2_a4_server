@@ -2,10 +2,12 @@
   "name": "server_side",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "dev": "npx tsx watch ./src/server.js",
-    "build": "tsc"
+    "dev": "npx tsx watch src/server.ts",
+    "seed:admin": "npx tsx src/dev-scripts/seedAdmin.ts",
+    "build": "prisma generate && tsup src/server.ts --format esm --platform node --target node20 --outDir dist --external pg-native",
+    "postinstall": "prisma generate"
   },
   "keywords": [],
   "author": "",
@@ -32,6 +34,7 @@
     "dotenv": "^17.2.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "pg": "^8.17.2"
+    "pg": "^8.17.2",
+    "tsup": "^8.5.1"
   }
 }
